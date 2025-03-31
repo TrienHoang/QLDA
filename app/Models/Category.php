@@ -10,4 +10,13 @@ class Category extends Model
     use HasFactory;
 
     protected $table = 'categories';
+
+    public $primaryKey = 'id';
+    public $fillable = [
+        'name',
+        'slug',
+        'description',
+        'parent_id',
+        'status',
+    ];
 }

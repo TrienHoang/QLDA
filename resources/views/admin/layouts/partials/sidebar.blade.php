@@ -43,7 +43,7 @@
                                     </a>
                                     <ul class="sidebar-submenu">
                                         <li>
-                                            <a href="products.html">Prodcts</a>
+                                            <a href="{{route('admin.products.index')}}">List Product</a>
                                         </li>
 
                                         <li>
@@ -59,11 +59,11 @@
                                     </a>
                                     <ul class="sidebar-submenu">
                                         <li>
-                                            <a href="category.html">Category List</a>
+                                            <a href="{{ route('admin.categories.listCategory') }}">Category List</a>
                                         </li>
 
                                         <li>
-                                            <a href="add-new-category.html">Add New Category</a>
+                                            <a href="{{ route('admin.categories.addCategory') }}">Add New Category</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -119,7 +119,7 @@
                                         <li>
                                             <a href="order-detail.html">Order Detail</a>
                                         </li>
-                                        
+
                                     </ul>
                                 </li>
 
