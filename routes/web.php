@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ProductController;
+
 Route::get('/', function () {
     return view('admin.dashboard');
 });
@@ -17,7 +19,7 @@ Route::group([
     ], function(){
         Route::get('/', [CategoryController::class, 'listCategory'])->name('listCategory');
 
-        Route::get('add-category', [CategoryController::class, 'addCategory'])->name('addCategory'); 
+        Route::get('add-category', [CategoryController::class, 'addCategory'])->name('addCategory');
 
         Route::post('add-category', [CategoryController::class, 'addPostCategory'])->name('addPostCategory');
 
@@ -30,6 +32,7 @@ Route::group([
         Route::patch('update-category/{id}', [CategoryController::class, 'updatePatchCategory'])->name('updatePatchCategory');
 
     });
+    Route::resource('products', ProductController::class);
 });
 
 

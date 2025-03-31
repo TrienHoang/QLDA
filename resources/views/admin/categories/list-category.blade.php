@@ -61,7 +61,7 @@
                                                             <i class="ri-pencil-line"></i>
                                                             </a>
                                                         </li>
-                                                        
+
                                                         <li>
                                                             <a href="#" data-bs-toggle="modal"
                                                                 data-bs-target="#deleteModal{{ $value->id }}">
@@ -108,6 +108,13 @@
 
                                     </tbody>
                                 </table>
+                            </div>
+                            <div class="d-flex justify-content-center mt-3">
+                                @for ($i = 1; $i <= $listCategory->lastPage(); $i++)
+                                    <a href="{{ $listCategory->url($i) }}" class="mx-1 {{ $i == $listCategory->currentPage() ? 'fw-bold text-primary' : '' }}">
+                                        {{ $i }}
+                                    </a>
+                                @endfor
                             </div>
                         </div>
                     </div>

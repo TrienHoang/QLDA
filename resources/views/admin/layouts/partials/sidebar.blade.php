@@ -43,7 +43,7 @@
                                     </a>
                                     <ul class="sidebar-submenu">
                                         <li>
-                                            <a href="products.html">Prodcts</a>
+                                            <a href="{{route('admin.products.index')}}">List Product</a>
                                         </li>
 
                                         <li>
@@ -119,7 +119,7 @@
                                         <li>
                                             <a href="order-detail.html">Order Detail</a>
                                         </li>
-                                        
+
                                     </ul>
                                 </li>
 
