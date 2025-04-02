@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use GuzzleHttp\Handler\Proxy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -180,5 +181,17 @@ class ProductController extends Controller
         
         $product->delete();
         return redirect()->route('admin.products.index', compact('product'));
+    }
+
+    public function showProduct($id) {
+        $product = Product::findOrFail($id);
+
+    // Lấy sản phẩm liên quan cùng danh mục
+        $relatedProducts = Product::where('category_id', $product->category_id)
+            ->where('id', '!=', $id)
+            ->take(4)
+            ->get();
+
+        return view('client.product-detail', compact('product', 'relatedProducts'));
     }
 }

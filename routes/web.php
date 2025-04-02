@@ -4,10 +4,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\User\HomeController;
 
-Route::get('/', function () {
-    return view('client.home');
-})->name('client.home');
+// Route::get('/', function () {
+//     return view('client.home');
+// })->name('client.home');
 
 
 Route::get('/auth', [AuthController::class, 'index'])->name('auth');
@@ -44,4 +45,19 @@ Route::group([
         Route::patch('update-category/{id}', [CategoryController::class, 'updatePatchCategory'])->name('updatePatchCategory');
     });
     Route::resource('products', ProductController::class);
+});
+
+
+// User
+
+Route::get('/', function(){
+    return redirect()->route('client.home');
+});
+
+Route::group([
+    'prefix' => 'client',
+    'as' => 'client.',
+], function() {
+    Route::get('home', [HomeController::class, 'home'])->name('home');
+    Route::get('/product/{id}', [ProductController::class, 'showProduct'])->name('showProduct');
 });
