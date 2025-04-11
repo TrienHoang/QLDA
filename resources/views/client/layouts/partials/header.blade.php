@@ -15,7 +15,7 @@
                     </div>
                     <div class="xc-header-one__btns d-none d-lg-flex">
 
-                        <a href="cart.html" class="xc-header-one__btn">
+                        <a href="{{ route('cart.listCart') }}" class="xc-header-one__btn">
                             <i class="fas fa-shopping-cart"></i>My cart
                         </a>
                         <a href="/logout" class="xc-header-one__btn">
@@ -48,7 +48,7 @@
                         <nav id="mobile-menu">
                             <ul class="ul-0">
                                 <li class="">
-                                    <a href="index.html">Home</a>
+                                    <a href="{{ route('client.home') }}">Home</a>
                                 </li>
                                 <li><a href="about.html">About</a></li>
                                 <li class="has-dropdown"><a href="shop.html">Shop</a>
