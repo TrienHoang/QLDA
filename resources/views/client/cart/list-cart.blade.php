@@ -4,6 +4,21 @@
         .xc-product-quantity {
             margin-left: 50px;
         }
+
+        .xc-product-quantity {
+        margin-left: 50px;
+        position: relative;
+    }
+
+    .xc-product-quantity .text-danger {
+        font-size: 13px;
+        color: #dc3545;
+        position: absolute;
+        bottom: -20px;
+        left: 0;
+        white-space: nowrap;
+        
+    }
     </style>
 @endpush
 @section('content')
@@ -13,6 +28,15 @@
             <div class="row gutter-y-30 gx-5">
                 <div class="col-lg-8 col-xl-9">
                     <div class="xc-cart-page__table">
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         <table class="table">
                             <thead>
                                 <tr>
@@ -40,7 +64,8 @@
                                                     <input class="xc-cart-input" type="text"
                                                         value="{{ $detail->quantity }}" min="1"
                                                         data-detail-id="{{ $detail->id }}"
-                                                        data-price="{{ $detail->price }}">
+                                                        data-price="{{ $detail->price }}"
+                                                        data-max="{{ $detail->product->quantity }}">
                                                     <span class="xc-cart-plus add" data-detail-id="{{ $detail->id }}">
                                                         <i class="fas fa-plus"></i>
                                                     </span>
@@ -97,7 +122,7 @@
                                         </div>
                                         <div class="cart-subtitle">
                                             <h4>Subtotal</h4>
-                                            <h4>$4589</h4>
+                                            <h4>{{ number_format($subtotal, 0, ',', '.') }} VND</h4>
                                         </div>
                                         <div class="cart-checkout">
                                             <h4>Shipping</h4>
@@ -118,7 +143,7 @@
                                         </div>
                                         <div class="cart-totails">
                                             <h4>Subtotal</h4>
-                                            <h4>$4589</h4>
+                                            <h4>{{ number_format($subtotal, 0, ',', '.') }} VND</h4>
                                         </div>
                                         <p>Wetters, as opposed to using Content here, content here, making it look like
                                             readable English. Many desktop </p>
@@ -148,50 +173,89 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-        // 1. Xử lý nút xóa sản phẩm (CHỈ GẮN 1 LẦN)
-        document.querySelectorAll('.delete-btn').forEach(button => {
-            // Clone node để xóa hết event listener cũ (nếu có)
-            const newButton = button.cloneNode(true);
-            button.parentNode.replaceChild(newButton, button);
-            
-            newButton.addEventListener('click', function(e) {
-                if (confirm('Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?')) {
-                    this.closest('form').submit();
-                }
+            // 1. Xử lý nút xóa sản phẩm (CHỈ GẮN 1 LẦN)
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                // Clone node để xóa hết event listener cũ (nếu có)
+                const newButton = button.cloneNode(true);
+                button.parentNode.replaceChild(newButton, button);
+
+                newButton.addEventListener('click', function(e) {
+                    if (confirm('Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?')) {
+                        this.closest('form').submit();
+                    }
+                });
             });
-        });
 
-        // 2. Xử lý tăng/giảm số lượng
-        function handleQuantityChange(e) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
+            // 2. Xử lý tăng/giảm số lượng
+            function handleQuantityChange(e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
 
-            const button = e.currentTarget;
-            const detailId = button.dataset.detailId;
-            const input = document.querySelector(`.xc-cart-input[data-detail-id="${detailId}"]`);
-            let quantity = parseInt(input.value);
-            const unitPrice = parseInt(input.dataset.price);
+                const button = e.currentTarget;
+                const detailId = button.dataset.detailId;
+                const input = document.querySelector(`.xc-cart-input[data-detail-id="${detailId}"]`);
+                let quantity = parseInt(input.value);
+                const unitPrice = parseInt(input.dataset.price);
 
-            if (button.classList.contains('xc-cart-plus')) {
-                quantity += 1;
-            } else if (button.classList.contains('xc-cart-minus') && quantity > 1) {
-                quantity -= 1;
+                if (button.classList.contains('xc-cart-plus')) {
+                    quantity += 1;
+                } else if (button.classList.contains('xc-cart-minus') && quantity > 1) {
+                    quantity -= 1;
+                }
+
+                input.value = quantity;
+                document.getElementById(`total-${detailId}`).innerText =
+                    (quantity * unitPrice).toLocaleString('vi-VN') + ' VND';
             }
 
-            input.value = quantity;
-            document.getElementById(`total-${detailId}`).innerText = 
-                (quantity * unitPrice).toLocaleString('vi-VN') + ' VND';
-        }
+            // Đảm bảo chỉ gắn sự kiện 1 lần bằng cách clone node
+            document.querySelectorAll('.xc-cart-plus, .xc-cart-minus').forEach(button => {
+                // Clone node để xóa hết event listener cũ
+                const newButton = button.cloneNode(true);
+                button.parentNode.replaceChild(newButton, button);
 
-        // Đảm bảo chỉ gắn sự kiện 1 lần bằng cách clone node
-        document.querySelectorAll('.xc-cart-plus, .xc-cart-minus').forEach(button => {
-            // Clone node để xóa hết event listener cũ
-            const newButton = button.cloneNode(true);
-            button.parentNode.replaceChild(newButton, button);
-            
-            // Gắn sự kiện mới
-            newButton.addEventListener('click', handleQuantityChange);
+                // Gắn sự kiện mới
+                newButton.addEventListener('click', handleQuantityChange);
+            });
+
+            function handleQuantityChange(e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+
+                const button = e.currentTarget;
+                const detailId = button.dataset.detailId;
+                const input = document.querySelector(`.xc-cart-input[data-detail-id="${detailId}"]`);
+                let quantity = parseInt(input.value);
+                const unitPrice = parseInt(input.dataset.price);
+                const maxQuantity = parseInt(input.dataset.max);
+
+                // Tìm phần tử lỗi (nếu có sẵn), hoặc tạo mới
+                let errorDiv = document.querySelector(`#error-${detailId}`);
+                if (!errorDiv) {
+                    errorDiv = document.createElement('div');
+                    errorDiv.id = `error-${detailId}`;
+                    errorDiv.classList.add('text-danger', 'mt-1');
+                    input.parentNode.appendChild(errorDiv);
+                }
+
+                errorDiv.innerText = ''; // Clear lỗi cũ
+
+                if (button.classList.contains('xc-cart-plus')) {
+                    if (quantity < maxQuantity) {
+                        quantity += 1;
+                    } else {
+                        errorDiv.innerText = 'Vượt quá số lượng tồn kho';
+                        return;
+                    }
+                } else if (button.classList.contains('xc-cart-minus') && quantity > 1) {
+                    quantity -= 1;
+                }
+
+                input.value = quantity;
+                document.getElementById(`total-${detailId}`).innerText =
+                    (quantity * unitPrice).toLocaleString('vi-VN') + ' VND';
+            }
+
         });
-    });
     </script>
 @endpush
