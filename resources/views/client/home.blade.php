@@ -86,8 +86,12 @@
                             <h4 class="xc-product-two__price">${{ number_format($product->price, 2) }}</h4>
                             <div class="xc-product-two__btn">
                                 <a href="{{ route('client.showProduct', $product->id) }}"><i class="fas fa-eye"></i></a>
-                                <a href=""><i class="fas fa-shopping-cart"></i></a>
+                                {{-- <a href="{{ route('cart.addToCart') }}"><i class="fas fa-shopping-cart"></i></a> --}}
+                                <a href="#" onclick="addToCart({{ $product->id }})">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </a>
                             </div>
+                            
                         </div>
                     </div>
                 @endforeach
@@ -319,3 +323,34 @@
     </div>
 </div> --}}
 @endsection
+
+@push('scripts')
+<script>
+    function addToCart(productId) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ route('cart.addToCart') }}';
+
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = '_token';
+        csrfToken.value = '{{ csrf_token() }}';
+        form.appendChild(csrfToken);
+
+        const productIdInput = document.createElement('input');
+        productIdInput.type = 'hidden';
+        productIdInput.name = 'product_id';
+        productIdInput.value = productId;
+        form.appendChild(productIdInput);
+
+        const quantityInput = document.createElement('input');
+        quantityInput.type = 'hidden';
+        quantityInput.name = 'quantity';
+        quantityInput.value = 1;
+        form.appendChild(quantityInput);
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
+@endpush
