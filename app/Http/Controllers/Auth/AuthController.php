@@ -30,10 +30,10 @@ class AuthController extends Controller
         if (Auth::attempt($data, $remember)) {
             // Xóa session cũ
             $session = Session::where('user_id', Auth::id())->delete();
-    
+
             // Tạo phiên đăng nhâp mới
             session()->put('user_id', Auth::id());
-    
+
             //Đăng nhập thành công
             if (Auth::user()->role_id == 1) {
                 return redirect()->route('admin.dashboard')->with('message', 'Đăng nhập thành công!');
@@ -45,7 +45,7 @@ class AuthController extends Controller
             return redirect()->route('auth')->with('message', 'Email hoặc mật khẩu không đúng!');
         }
     }
-    
+
     public function register(UserRegisterRequest $request)
     {
         try {
@@ -58,7 +58,7 @@ class AuthController extends Controller
             ];
             // Lưu người dùng vào cơ sở dữ liệu
             User::create($data);
-    
+
             // Sau khi đăng ký thành công, chuyển hướng về trang auth với thông báo thành công
             return redirect()->route('auth')->with('message', 'Đăng ký thành công! Mời đăng nhập');
         } catch (\Throwable $th) {

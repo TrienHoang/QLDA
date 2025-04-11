@@ -8,8 +8,12 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    public function home(){
-        $products = Product::where('status', 1)->take(10)->get();
+    public function home(Request $request){
+        $query = Product::query();
+        if($request->has('search')) {
+            $query->where('name', 'like', '%'.$request->search.'%');
+        }
+        $products = $query->orderBy('id','desc')->paginate(10);
         return view('client.home', compact('products'));
     }
 }
