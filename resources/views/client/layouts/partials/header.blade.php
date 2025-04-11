@@ -1,15 +1,15 @@
 <header>
-    
+
     <div class="xc-header-one bg-black" id="xc-header-sticky">
         <div class="container">
             <div class="xc-header-one__wrapper">
                 <div class="xc-header-one__logo">
-                    <a href="index.html"><img src="{{ asset('build/client/assets/img/logo/white-logo.png')}}" alt="logo" width="158"></a>
+                    <a href="{{route('client.home')}}"><img src="{{ asset('build/client/assets/img/logo/white-logo.png')}}" alt="logo" width="158"></a>
                 </div>
                 <div class="xc-header-one__right">
                     <div class="xc-header-one__search d-none d-xl-block">
                         <form action="#">
-                            <input type="search" placeholder="Search">
+                            <input type="search" placeholder="Search" value="{{request('search')}}" name="search">
                             <button type="submit">Search</button>
                         </form>
                     </div>
@@ -99,7 +99,7 @@
     <div class="xc-search-popup__wrap">
         <a href="#" class="xc-search-popup__close xc-close-toggler"></a>
         <div class="xc-search-popup__form">
-            <form role="search" method="get" action="#">
+            <form role="search" method="get" action="">
                 <input type="search" placeholder="Search Here..." value="" name="s">
                 <button type="submit"><i class="icon-search"></i></button>
             </form>

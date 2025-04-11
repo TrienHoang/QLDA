@@ -92,6 +92,13 @@
                     </div>
                 @endforeach
             </div>
+            <div class="d-flex justify-content-center mt-3">
+                @for ($i = 1; $i <= $products->lastPage(); $i++)
+                    <a href="{{ $products->url($i) }}" class="mx-1 {{ $i == $products->currentPage() ? 'fw-bold text-primary' : '' }}">
+                        {{ $i }}
+                    </a>
+                @endfor
+            </div>
         </div>
     </div>
 
