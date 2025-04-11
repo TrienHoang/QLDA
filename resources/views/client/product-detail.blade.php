@@ -1,22 +1,24 @@
 @extends('client.layouts.main')
 
 @push('styles')
-<style>
-    .xc-product-eight__img {
-    width: 100%;
-    height: 200px; /* Chiều cao cố định */
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+    <style>
+        .xc-product-eight__img {
+            width: 100%;
+            height: 200px;
+            /* Chiều cao cố định */
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-.xc-product-eight__img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Cắt ảnh để lấp đầy khung */
-}
-</style>
+        .xc-product-eight__img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Cắt ảnh để lấp đầy khung */
+        }
+    </style>
 @endpush
 @section('content')
     <div class="xc-breadcrumb__area base-bg">
@@ -68,26 +70,41 @@
 
                         <div class="product__details-price">
                             @if ($product->discount_price)
-                                <span
-                                    class="product__details-ammount old-ammount">${{ number_format($product->price, 2) }}</span>
-                                <span
-                                    class="product__details-ammount new-ammount">${{ number_format($product->discount_price, 2) }}</span>
+                                <!-- Giá gốc và giá giảm -->
+                                <span class="product__details-ammount old-ammount" data-unitprice="{{ $product->price }}">
+                                    $<span class="price-old">{{ number_format($product->price, 2) }}</span>
+                                </span>
+                                <span class="product__details-ammount new-ammount"
+                                    data-unitprice="{{ $product->discount_price }}" data-discount="true">
+                                    $<span class="price-current">{{ number_format($product->discount_price, 2) }}</span>
+                                </span>
                             @else
-                                <span
-                                    class="product__details-ammount new-ammount">${{ number_format($product->price, 2) }}</span>
+                                <span class="product__details-ammount new-ammount" data-unitprice="{{ $product->price }}">
+                                    $<span class="price-current">{{ number_format($product->price, 2) }}</span>
+                                </span>
                             @endif
                         </div>
 
                         <div class="product__details-action d-flex flex-wrap align-items-center">
-                            <a href="cart.html" class="product-add-cart-btn swiftcart-btn">
-                                Add to Cart
-                            </a>
-                            <button type="button" class="product-action-btn">
-                                <i class="fas fa-heart"></i> <!-- Icon yêu thích -->
-                            </button>
-                            <button type="button" class="product-action-btn">
-                                <i class="fas fa-eye"></i> <!-- Icon mắt -->
-                            </button>
+                            <form action="{{ route('cart.addToCart') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                <input type="hidden" name="quantity" class="quantity-input" value="1">
+
+                                <div class="xc-product-quantity mt-10 mb-10">
+                                    <span class="xc-cart-minus">
+                                        <i class="fas fa-minus"></i>
+                                    </span>
+                                    <input class="xc-cart-input" type="text" value="1" readonly>
+                                    <span class="xc-cart-plus">
+                                        <i class="fas fa-plus"></i>
+                                    </span>
+                                </div>
+
+                                <button type="submit" class="product-add-cart-btn swiftcart-btn">
+                                    Add to cart
+                                </button>
+                            </form>
                         </div>
 
                         <div class="product__details-share">
@@ -112,27 +129,121 @@
 
     {{-- Sản phẩm liên quan --}}
     <div class="xc-related-product pb-80">
-    <div class="container">
-        <h3 class="xc-section-title mb-30">Related Products</h3>
-        <div class="row gutter-y-30">
-            @foreach ($relatedProducts as $related)
-                <div class="col-xl-3 col-md-6">
-                    <div class="xc-product-eight__item">
-                        <div class="xc-product-eight__img">
-                            <img src="{{ asset('storage/' . $related->image) }}" alt="{{ $related->name }}">
-                            <span class="xc-product-eight__offer">-{{ rand(5, 30) }}% off</span>
-                        </div>
-                        <div class="xc-product-eight__content">
-                            <h3 class="xc-product-eight__title">
-                                <a href="{{ route('client.showProduct', $product->id) }}">{{ $related->name }}</a>
-                            </h3>
-                            <h5 class="xc-product-eight__price">${{ number_format($related->price, 2) }}</h5>
+        <div class="container">
+            <h3 class="xc-section-title mb-30">Related Products</h3>
+            <div class="row gutter-y-30">
+                @foreach ($relatedProducts as $related)
+                    <div class="col-xl-3 col-md-6">
+                        <div class="xc-product-eight__item">
+                            <div class="xc-product-eight__img">
+                                <img src="{{ asset('storage/' . $related->image) }}" alt="{{ $related->name }}">
+                                <span class="xc-product-eight__offer">-{{ rand(5, 30) }}% off</span>
+                            </div>
+                            <div class="xc-product-eight__content">
+                                <h3 class="xc-product-eight__title">
+                                    <a href="{{ route('client.showProduct', $product->id) }}">{{ $related->name }}</a>
+                                </h3>
+                                <h5 class="xc-product-eight__price">${{ number_format($related->price, 2) }}</h5>
+                            </div>
                         </div>
                     </div>
-                </div>
-            @endforeach
+                @endforeach
+            </div>
         </div>
     </div>
-</div>
 
 @endsection
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Lấy các phần tử DOM cần thiết
+            const minusBtns = document.querySelectorAll('.xc-cart-minus');
+            const plusBtns = document.querySelectorAll('.xc-cart-plus');
+            const quantityInputs = document.querySelectorAll('.xc-cart-input');
+
+            // Lấy thông tin giá
+            const priceElement = document.querySelector('[data-unitprice]');
+            const currentPriceElement = document.querySelector('.price-current');
+            const oldPriceElement = document.querySelector('.price-old');
+
+            // Lấy giá gốc
+            const unitPrice = parseFloat(priceElement.dataset.unitprice);
+            let oldUnitPrice = 0;
+
+            if (oldPriceElement) {
+                oldUnitPrice = parseFloat(oldPriceElement.closest('[data-unitprice]').dataset.unitprice);
+            }
+
+            // Xử lý tăng số lượng
+            plusBtns.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const wrapper = this.closest('.xc-product-quantity');
+                    const input = wrapper.querySelector('.xc-cart-input');
+                    const form = this.closest('form');
+
+                    if (form) {
+                        const quantityInput = form.querySelector('.quantity-input');
+                        let currentValue = parseInt(input.value);
+                        currentValue += 1;
+                        input.value = currentValue;
+
+                        if (quantityInput) {
+                            quantityInput.value = currentValue;
+                        }
+
+                        // Cập nhật giá
+                        updatePrice(currentValue, unitPrice, oldUnitPrice);
+                    }
+                });
+            });
+
+            // Xử lý giảm số lượng
+            minusBtns.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const wrapper = this.closest('.xc-product-quantity');
+                    const input = wrapper.querySelector('.xc-cart-input');
+                    const form = this.closest('form');
+
+                    if (form) {
+                        const quantityInput = form.querySelector('.quantity-input');
+                        let currentValue = parseInt(input.value);
+
+                        if (currentValue > 1) {
+                            currentValue -= 1;
+                            input.value = currentValue;
+
+                            if (quantityInput) {
+                                quantityInput.value = currentValue;
+                            }
+
+                            // Cập nhật giá
+                            updatePrice(currentValue, unitPrice, oldUnitPrice);
+                        }
+                    }
+                });
+            });
+
+            // Hàm cập nhật giá
+            function updatePrice(quantity, unitPrice, oldUnitPrice) {
+                if (currentPriceElement) {
+                    const totalPrice = (quantity * unitPrice).toFixed(2);
+                    currentPriceElement.textContent = totalPrice;
+
+                    // Format số với dấu phẩy ngăn cách hàng nghìn
+                    currentPriceElement.textContent = formatNumber(totalPrice);
+                }
+
+                if (oldPriceElement && oldUnitPrice) {
+                    const oldTotalPrice = (quantity * oldUnitPrice).toFixed(2);
+                    oldPriceElement.textContent = formatNumber(oldTotalPrice);
+                }
+            }
+
+            // Hàm định dạng số
+            function formatNumber(num) {
+                return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+        });
+    </script>
+@endpush
