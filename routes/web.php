@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Auth\AuthController;
+
 use App\Http\Controllers\User\HomeController;
 
 // Route::get('/', function () {
@@ -45,19 +47,30 @@ Route::group([
         Route::patch('update-category/{id}', [CategoryController::class, 'updatePatchCategory'])->name('updatePatchCategory');
     });
     Route::resource('products', ProductController::class);
+
+    Route::prefix('orders')->name('orders.')->group(function () {
+        Route::get('/', [OrderController::class, 'index'])->name('index'); // Danh sách đơn hàng
+
+        Route::get('/{order}', [OrderController::class, 'show'])->name('show'); // Xem chi tiết đơn hàng
+
+        // Route::get('/{id}/edit', [OrderController::class, 'edit'])->name('edit'); // Form sửa
+        Route::patch('/{order}', [OrderController::class, 'update'])->name('update'); // Xử lý update
+
+        Route::delete('/{order}', [OrderController::class, 'destroy'])->name('destroy'); // Xoá đơn hàng
+    });
 });
 
 
 // User
 
-Route::get('/', function(){
+Route::get('/', function () {
     return redirect()->route('client.home');
 });
 
 Route::group([
     'prefix' => 'client',
     'as' => 'client.',
-], function() {
+], function () {
     Route::get('home', [HomeController::class, 'home'])->name('home');
     Route::get('/product/{id}', [ProductController::class, 'showProduct'])->name('showProduct');
 });
