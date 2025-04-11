@@ -6,19 +6,19 @@
         }
 
         .xc-product-quantity {
-        margin-left: 50px;
-        position: relative;
-    }
+            margin-left: 50px;
+            position: relative;
+        }
 
-    .xc-product-quantity .text-danger {
-        font-size: 13px;
-        color: #dc3545;
-        position: absolute;
-        bottom: -20px;
-        left: 0;
-        white-space: nowrap;
-        
-    }
+        .xc-product-quantity .text-danger {
+            font-size: 13px;
+            color: #dc3545;
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            white-space: nowrap;
+
+        }
     </style>
 @endpush
 @section('content')
@@ -122,7 +122,8 @@
                                         </div>
                                         <div class="cart-subtitle">
                                             <h4>Subtotal</h4>
-                                            <h4>{{ number_format($subtotal, 0, ',', '.') }} VND</h4>
+                                            <h4 class="subtotal-amount">{{ number_format($subtotal, 0, ',', '.') }} VND
+                                            </h4>
                                         </div>
                                         <div class="cart-checkout">
                                             <h4>Shipping</h4>
@@ -143,7 +144,8 @@
                                         </div>
                                         <div class="cart-totails">
                                             <h4>Subtotal</h4>
-                                            <h4>{{ number_format($subtotal, 0, ',', '.') }} VND</h4>
+                                            <h4 class="subtotal-amount">{{ number_format($subtotal, 0, ',', '.') }} VND
+                                            </h4>
                                         </div>
                                         <p>Wetters, as opposed to using Content here, content here, making it look like
                                             readable English. Many desktop </p>
@@ -162,20 +164,8 @@
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // === XÓA SẢN PHẨM ===
             document.querySelectorAll('.delete-btn').forEach(button => {
-                button.addEventListener('click', function(e) {
-                    if (confirm('Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?')) {
-                        // Nếu đồng ý thì submit form
-                        this.closest('form').submit();
-                    }
-                });
-            });
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // 1. Xử lý nút xóa sản phẩm (CHỈ GẮN 1 LẦN)
-            document.querySelectorAll('.delete-btn').forEach(button => {
-                // Clone node để xóa hết event listener cũ (nếu có)
                 const newButton = button.cloneNode(true);
                 button.parentNode.replaceChild(newButton, button);
 
@@ -186,38 +176,22 @@
                 });
             });
 
-            // 2. Xử lý tăng/giảm số lượng
-            function handleQuantityChange(e) {
-                e.preventDefault();
-                e.stopImmediatePropagation();
+            // === HÀM CẬP NHẬT SUBTOTAL ===
+            function updateSubtotal() {
+                let subtotal = 0;
+                document.querySelectorAll('.xc-cart-input').forEach(input => {
+                    const quantity = parseInt(input.value);
+                    const price = parseInt(input.dataset.price);
+                    subtotal += quantity * price;
+                });
 
-                const button = e.currentTarget;
-                const detailId = button.dataset.detailId;
-                const input = document.querySelector(`.xc-cart-input[data-detail-id="${detailId}"]`);
-                let quantity = parseInt(input.value);
-                const unitPrice = parseInt(input.dataset.price);
-
-                if (button.classList.contains('xc-cart-plus')) {
-                    quantity += 1;
-                } else if (button.classList.contains('xc-cart-minus') && quantity > 1) {
-                    quantity -= 1;
+                const subtotalElement = document.querySelector('#subtotal-amount');
+                if (subtotalElement) {
+                    subtotalElement.innerText = subtotal.toLocaleString('vi-VN') + ' VND';
                 }
-
-                input.value = quantity;
-                document.getElementById(`total-${detailId}`).innerText =
-                    (quantity * unitPrice).toLocaleString('vi-VN') + ' VND';
             }
 
-            // Đảm bảo chỉ gắn sự kiện 1 lần bằng cách clone node
-            document.querySelectorAll('.xc-cart-plus, .xc-cart-minus').forEach(button => {
-                // Clone node để xóa hết event listener cũ
-                const newButton = button.cloneNode(true);
-                button.parentNode.replaceChild(newButton, button);
-
-                // Gắn sự kiện mới
-                newButton.addEventListener('click', handleQuantityChange);
-            });
-
+            // === HÀM XỬ LÝ TĂNG/GIẢM ===
             function handleQuantityChange(e) {
                 e.preventDefault();
                 e.stopImmediatePropagation();
@@ -229,7 +203,6 @@
                 const unitPrice = parseInt(input.dataset.price);
                 const maxQuantity = parseInt(input.dataset.max);
 
-                // Tìm phần tử lỗi (nếu có sẵn), hoặc tạo mới
                 let errorDiv = document.querySelector(`#error-${detailId}`);
                 if (!errorDiv) {
                     errorDiv = document.createElement('div');
@@ -252,10 +225,37 @@
                 }
 
                 input.value = quantity;
-                document.getElementById(`total-${detailId}`).innerText =
-                    (quantity * unitPrice).toLocaleString('vi-VN') + ' VND';
+
+                // Cập nhật tổng từng sản phẩm
+                const totalElement = document.getElementById(`total-${detailId}`);
+                const totalPrice = quantity * unitPrice;
+                totalElement.innerText = totalPrice.toLocaleString('vi-VN') + ' VND';
+
+                // Cập nhật tổng Subtotal
+                let newSubtotal = 0;
+                document.querySelectorAll('.xc-cart-input').forEach(input => {
+                    const price = parseInt(input.dataset.price);
+                    const qty = parseInt(input.value);
+                    newSubtotal += price * qty;
+                });
+
+                // Cập nhật tất cả nơi hiển thị Subtotal
+                document.querySelectorAll('.subtotal-amount').forEach(el => {
+                    el.innerText = newSubtotal.toLocaleString('vi-VN') + ' VND';
+                });
             }
 
+
+            // === GẮN SỰ KIỆN CHO NÚT + / - ===
+            document.querySelectorAll('.xc-cart-plus, .xc-cart-minus').forEach(button => {
+                const newButton = button.cloneNode(true);
+                button.parentNode.replaceChild(newButton, button);
+
+                newButton.addEventListener('click', handleQuantityChange);
+            });
+
+            // Khởi động: cập nhật subtotal nếu cần
+            updateSubtotal();
         });
     </script>
 @endpush
