@@ -8,13 +8,11 @@ use App\Http\Controllers\Auth\AuthController;
 
 use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\Cart\CartController;
-// Route::get('/', function () {
-//     return view('client.home');
-// })->name('client.home');
+
 
 
 Route::get('/auth', [AuthController::class, 'index'])->name('auth');
-Route::get('/login', [AuthController::class, 'index'])->name('login'); 
+Route::get('/login', [AuthController::class, 'index'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
@@ -52,12 +50,14 @@ Route::group([
     Route::prefix('orders')->name('orders.')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index'); // Danh sách đơn hàng
 
+        Route::get('/trashed', [OrderController::class, 'trashed'])->name('trashed');
+
         Route::get('/{order}', [OrderController::class, 'show'])->name('show'); // Xem chi tiết đơn hàng
-
-        // Route::get('/{id}/edit', [OrderController::class, 'edit'])->name('edit'); // Form sửa
         Route::patch('/{order}', [OrderController::class, 'update'])->name('update'); // Xử lý update
-
         Route::delete('/{order}', [OrderController::class, 'destroy'])->name('destroy'); // Xoá đơn hàng
+
+        Route::post('/{id}/restore', [OrderController::class, 'restore'])->name('restore');
+        Route::delete('/{id}/force-delete', [OrderController::class, 'forceDelete'])->name('forceDelete');
     });
 });
 
