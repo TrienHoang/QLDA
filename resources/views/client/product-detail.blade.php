@@ -52,7 +52,7 @@
 
                 <div class="col-xl-6 col-lg-6">
                     <div class="product__details-wrapper">
-                        <div class="product__details-stock">
+                        <div class="product__details-stock" data-stock="{{ $product->quantity }}">
                             <span>{{ $product->quantity }} In Stock</span>
                         </div>
                         <h3 class="product__details-title">{{ $product->name }}</h3>
@@ -99,6 +99,9 @@
                                     <span class="xc-cart-plus">
                                         <i class="fas fa-plus"></i>
                                     </span>
+                                </div>
+                                <div class="quantity-error text-danger" style="display: none; font-weight: bold;">
+                                    Vượt quá số lượng tồn kho
                                 </div>
 
                                 <button type="submit" class="product-add-cart-btn swiftcart-btn">
@@ -155,95 +158,95 @@
 @endsection
 
 @push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Lấy các phần tử DOM cần thiết
-            const minusBtns = document.querySelectorAll('.xc-cart-minus');
-            const plusBtns = document.querySelectorAll('.xc-cart-plus');
-            const quantityInputs = document.querySelectorAll('.xc-cart-input');
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const minusBtns = document.querySelectorAll('.xc-cart-minus');
+        const plusBtns = document.querySelectorAll('.xc-cart-plus');
+        const quantityInputs = document.querySelectorAll('.xc-cart-input');
 
-            // Lấy thông tin giá
-            const priceElement = document.querySelector('[data-unitprice]');
-            const currentPriceElement = document.querySelector('.price-current');
-            const oldPriceElement = document.querySelector('.price-old');
+        const priceElement = document.querySelector('[data-unitprice]');
+        const currentPriceElement = document.querySelector('.price-current');
+        const oldPriceElement = document.querySelector('.price-old');
 
-            // Lấy giá gốc
-            const unitPrice = parseFloat(priceElement.dataset.unitprice);
-            let oldUnitPrice = 0;
+        const unitPrice = parseFloat(priceElement.dataset.unitprice);
+        let oldUnitPrice = 0;
 
-            if (oldPriceElement) {
-                oldUnitPrice = parseFloat(oldPriceElement.closest('[data-unitprice]').dataset.unitprice);
-            }
+        if (oldPriceElement) {
+            oldUnitPrice = parseFloat(oldPriceElement.closest('[data-unitprice]').dataset.unitprice);
+        }
 
-            // Xử lý tăng số lượng
-            plusBtns.forEach(function(button) {
-                button.addEventListener('click', function() {
-                    const wrapper = this.closest('.xc-product-quantity');
-                    const input = wrapper.querySelector('.xc-cart-input');
-                    const form = this.closest('form');
+        const stock = parseInt(document.querySelector('.product__details-stock').dataset.stock);
 
-                    if (form) {
-                        const quantityInput = form.querySelector('.quantity-input');
-                        let currentValue = parseInt(input.value);
+        // Tăng số lượng
+        plusBtns.forEach(function (button) {
+            button.addEventListener('click', function () {
+                const wrapper = this.closest('.xc-product-quantity');
+                const input = wrapper.querySelector('.xc-cart-input');
+                const form = this.closest('form');
+                const errorMessage = form.querySelector('.quantity-error');
+
+                if (form) {
+                    const quantityInput = form.querySelector('.quantity-input');
+                    let currentValue = parseInt(input.value);
+
+                    if (currentValue < stock) {
                         currentValue += 1;
                         input.value = currentValue;
+                        quantityInput.value = currentValue;
 
-                        if (quantityInput) {
-                            quantityInput.value = currentValue;
-                        }
+                        if (errorMessage) errorMessage.style.display = 'none';
 
-                        // Cập nhật giá
+                        updatePrice(currentValue, unitPrice, oldUnitPrice);
+                    } else {
+                        if (errorMessage) errorMessage.style.display = 'block';
+                    }
+                }
+            });
+        });
+
+        // Giảm số lượng
+        minusBtns.forEach(function (button) {
+            button.addEventListener('click', function () {
+                const wrapper = this.closest('.xc-product-quantity');
+                const input = wrapper.querySelector('.xc-cart-input');
+                const form = this.closest('form');
+                const errorMessage = form.querySelector('.quantity-error');
+
+                if (form) {
+                    const quantityInput = form.querySelector('.quantity-input');
+                    let currentValue = parseInt(input.value);
+
+                    if (currentValue > 1) {
+                        currentValue -= 1;
+                        input.value = currentValue;
+                        quantityInput.value = currentValue;
+
+                        if (errorMessage) errorMessage.style.display = 'none';
+
                         updatePrice(currentValue, unitPrice, oldUnitPrice);
                     }
-                });
-            });
-
-            // Xử lý giảm số lượng
-            minusBtns.forEach(function(button) {
-                button.addEventListener('click', function() {
-                    const wrapper = this.closest('.xc-product-quantity');
-                    const input = wrapper.querySelector('.xc-cart-input');
-                    const form = this.closest('form');
-
-                    if (form) {
-                        const quantityInput = form.querySelector('.quantity-input');
-                        let currentValue = parseInt(input.value);
-
-                        if (currentValue > 1) {
-                            currentValue -= 1;
-                            input.value = currentValue;
-
-                            if (quantityInput) {
-                                quantityInput.value = currentValue;
-                            }
-
-                            // Cập nhật giá
-                            updatePrice(currentValue, unitPrice, oldUnitPrice);
-                        }
-                    }
-                });
-            });
-
-            // Hàm cập nhật giá
-            function updatePrice(quantity, unitPrice, oldUnitPrice) {
-                if (currentPriceElement) {
-                    const totalPrice = (quantity * unitPrice).toFixed(2);
-                    currentPriceElement.textContent = totalPrice;
-
-                    // Format số với dấu phẩy ngăn cách hàng nghìn
-                    currentPriceElement.textContent = formatNumber(totalPrice);
                 }
-
-                if (oldPriceElement && oldUnitPrice) {
-                    const oldTotalPrice = (quantity * oldUnitPrice).toFixed(2);
-                    oldPriceElement.textContent = formatNumber(oldTotalPrice);
-                }
-            }
-
-            // Hàm định dạng số
-            function formatNumber(num) {
-                return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            }
+            });
         });
-    </script>
+
+        // Cập nhật giá
+        function updatePrice(quantity, unitPrice, oldUnitPrice) {
+            if (currentPriceElement) {
+                const totalPrice = (quantity * unitPrice).toFixed(2);
+                currentPriceElement.textContent = formatNumber(totalPrice);
+            }
+
+            if (oldPriceElement && oldUnitPrice) {
+                const oldTotalPrice = (quantity * oldUnitPrice).toFixed(2);
+                oldPriceElement.textContent = formatNumber(oldTotalPrice);
+            }
+        }
+
+        // Định dạng số
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+    });
+</script>
+
 @endpush
