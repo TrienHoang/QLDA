@@ -114,11 +114,11 @@
                                     </a>
                                     <ul class="sidebar-submenu">
                                         <li>
-                                            <a href="order-list.html">Order List</a>
+                                            <a href="{{ route('admin.orders.index') }}">Order List</a>
                                         </li>
-                                        <li>
-                                            <a href="order-detail.html">Order Detail</a>
-                                        </li>
+                                        {{-- <li>
+                                            <a href="{{ route('admin.orders.show', $order) }}">Order Detail</a>
+                                        </li> --}}
 
                                     </ul>
                                 </li>
