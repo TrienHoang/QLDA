@@ -57,7 +57,6 @@
         </div>
     </div>
 
-
     <!-- product two start -->
     <div class="xc-product-two pb-80">
         <div class="container">
@@ -83,15 +82,20 @@
                                 </div>
                             @endif
                             <h3 class="xc-product-two__title"><a href="{{ route('client.showProduct', $product->id) }}">{{ $product->name }}</a></h3>
-                            <h4 class="xc-product-two__price">${{ number_format($product->price, 2) }}</h4>
+                            <h4 class="xc-product-two__price">
+                                @if ($product->discount_price)
+                                    <span>${{ number_format($product->discount_price, 2) }}</span>
+                                    <del>${{ number_format($product->price, 2) }}</del>
+                                @else
+                                    <span>${{ number_format($product->price, 2) }}</span>
+                                @endif
+                            </h4>
                             <div class="xc-product-two__btn">
                                 <a href="{{ route('client.showProduct', $product->id) }}"><i class="fas fa-eye"></i></a>
-                                {{-- <a href="{{ route('cart.addToCart') }}"><i class="fas fa-shopping-cart"></i></a> --}}
                                 <a href="#" onclick="addToCart({{ $product->id }})">
                                     <i class="fas fa-shopping-cart"></i>
                                 </a>
                             </div>
-                            
                         </div>
                     </div>
                 @endforeach
@@ -105,230 +109,11 @@
             </div>
         </div>
     </div>
-
-
     <!-- product two end -->
 
     <!-- top sale product start -->
-    {{-- <div class="xc-product-four pb-80">
-    <div class="container">
-        <div class="xc-sec-heading xc-has-btn">
-            <h3 class="xc-sec-heading__title"><span><i class="icon-power"></i></span>Top Sale Product</h3>
-            <div class="xc-sec-heading__btn">
-                <a href="shop.html" class="xc-sec-heading-btn">show all</a>
-            </div>
-        </div>
-        <div class="row gutter-y-60">
-            <!-- <div class="col-xl-3">
-                <div class="xc-banner-four">
-                    <div class="xc-banner-four__img">
-                        <img src="assets/img/banner/banner-4-1.jpg" alt="banner4">
-                        <h3 class="xc-banner-four__title">Xiaomi True Wireless Earbuds</h3>
-                        <p class="xc-banner-four__info">Escape the noise, It’s time to hear the magic with Xiaomi
-                            Earbuds.</p>
-                        <p class="xc-banner-four__price">Only for: <span> $299 USD </span></p>
-                        <a href="shop.html" class="swiftcart-btn w-100">Shop now <i class="icon-next"></i></a>
-                    </div>
-                </div>
-            </div> -->
-            <div class="col-xl-12">
-                <div class="xc-product-four__wrapper">
-                    <div class="row gutter-y-20">
-                        <div class="col-md-6 col-lg-4">
-                            <div class="xc-product-list__item xc-product-list__item-two">
-                                <div class="xc-product-list__thumb">
-                                    <img src="assets/img/products/product-sm-1-1.png" alt="">
-                                </div>
-                                <div class="xc-product-list__content">
-                                    <h3 class="xc-product-list__title"><a href="product-details.html">27-inch
-                                            FHD 1080p
-                                            IPS GamingLED Monitor</a></h3>
-                                    <div class="xc-product-list__ratting">
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        (25)
-                                    </div>
-                                    <span class="xc-product-list__price">$360</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4">
-                            <div class="xc-product-list__item xc-product-list__item-two">
-                                <div class="xc-product-list__thumb">
-                                    <img src="assets/img/products/product-sm-1-2.png" alt="">
-                                </div>
-                                <div class="xc-product-list__content">
-                                    <h3 class="xc-product-list__title"><a href="product-details.html">27-inch
-                                            FHD 1080p
-                                            IPS GamingLED Monitor</a></h3>
-                                    <div class="xc-product-list__ratting">
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        (25)
-                                    </div>
-                                    <span class="xc-product-list__price">$360</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4">
-                            <div class="xc-product-list__item xc-product-list__item-two">
-                                <div class="xc-product-list__thumb">
-                                    <img src="assets/img/products/product-sm-1-3.png" alt="">
-                                </div>
-                                <div class="xc-product-list__content">
-                                    <h3 class="xc-product-list__title"><a href="product-details.html">27-inch
-                                            FHD 1080p
-                                            IPS GamingLED Monitor</a></h3>
-                                    <div class="xc-product-list__ratting">
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        (25)
-                                    </div>
-                                    <span class="xc-product-list__price">$360</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4">
-                            <div class="xc-product-list__item xc-product-list__item-two">
-                                <div class="xc-product-list__thumb">
-                                    <img src="assets/img/products/product-sm-1-4.png" alt="">
-                                </div>
-                                <div class="xc-product-list__content">
-                                    <h3 class="xc-product-list__title"><a href="product-details.html">27-inch
-                                            FHD 1080p
-                                            IPS GamingLED Monitor</a></h3>
-                                    <div class="xc-product-list__ratting">
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        (25)
-                                    </div>
-                                    <span class="xc-product-list__price">$360</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4">
-                            <div class="xc-product-list__item xc-product-list__item-two">
-                                <div class="xc-product-list__thumb">
-                                    <img src="assets/img/products/product-sm-1-5.png" alt="">
-                                </div>
-                                <div class="xc-product-list__content">
-                                    <h3 class="xc-product-list__title"><a href="product-details.html">27-inch
-                                            FHD 1080p
-                                            IPS GamingLED Monitor</a></h3>
-                                    <div class="xc-product-list__ratting">
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        (25)
-                                    </div>
-                                    <span class="xc-product-list__price">$360</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4">
-                            <div class="xc-product-list__item xc-product-list__item-two">
-                                <div class="xc-product-list__thumb">
-                                    <img src="assets/img/products/product-sm-1-6.png" alt="">
-                                </div>
-                                <div class="xc-product-list__content">
-                                    <h3 class="xc-product-list__title"><a href="product-details.html">27-inch
-                                            FHD 1080p
-                                            IPS GamingLED Monitor</a></h3>
-                                    <div class="xc-product-list__ratting">
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        (25)
-                                    </div>
-                                    <span class="xc-product-list__price">$360</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4">
-                            <div class="xc-product-list__item xc-product-list__item-two">
-                                <div class="xc-product-list__thumb">
-                                    <img src="assets/img/products/product-sm-1-7.png" alt="">
-                                </div>
-                                <div class="xc-product-list__content">
-                                    <h3 class="xc-product-list__title"><a href="product-details.html">27-inch
-                                            FHD 1080p
-                                            IPS GamingLED Monitor</a></h3>
-                                    <div class="xc-product-list__ratting">
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        (25)
-                                    </div>
-                                    <span class="xc-product-list__price">$360</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4">
-                            <div class="xc-product-list__item xc-product-list__item-two">
-                                <div class="xc-product-list__thumb">
-                                    <img src="assets/img/products/product-sm-1-8.png" alt="">
-                                </div>
-                                <div class="xc-product-list__content">
-                                    <h3 class="xc-product-list__title"><a href="product-details.html">27-inch
-                                            FHD 1080p
-                                            IPS GamingLED Monitor</a></h3>
-                                    <div class="xc-product-list__ratting">
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        (25)
-                                    </div>
-                                    <span class="xc-product-list__price">$360</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-4">
-                            <div class="xc-product-list__item xc-product-list__item-two">
-                                <div class="xc-product-list__thumb">
-                                    <img src="assets/img/products/product-sm-1-9.png" alt="">
-                                </div>
-                                <div class="xc-product-list__content">
-                                    <h3 class="xc-product-list__title"><a href="product-details.html">27-inch
-                                            FHD 1080p
-                                            IPS GamingLED Monitor</a></h3>
-                                    <div class="xc-product-list__ratting">
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        <i class="icon-star"></i>
-                                        (25)
-                                    </div>
-                                    <span class="xc-product-list__price">$360</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> --}}
+    {{-- Phần này giữ nguyên vì đang bị comment --}}
+    {{-- <div class="xc-product-four pb-80"> ... </div> --}}
 @endsection
 
 @push('scripts')

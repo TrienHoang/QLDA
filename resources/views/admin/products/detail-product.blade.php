@@ -28,12 +28,12 @@
 
             <tr>
                 <th>Giá</th>
-            <td>{{ number_format($product->price, 0, ',', '.') }} VNĐ</td>
+            <td>${{ number_format($product->price, 0, ',', '.') }} </td>
             </tr>
 
             <tr>
                 <th>Giá khuyến mãi</th>
-                <td>{{ $product->discount_price ? number_format($product->discount_price, 0, ',', '.') . ' VNĐ' : 'Không có' }}</td>
+                <td>{{ $product->discount_price ? number_format($product->discount_price, 0, ',', '.') . ' $' : 'Không có' }}</td>
             </tr>
 
             <tr>

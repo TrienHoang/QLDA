@@ -40,7 +40,7 @@
 
             <!-- Giá sản phẩm -->
             <div class="mb-3">
-                <label for="price" class="form-label">Giá (VNĐ)</label>
+                <label for="price" class="form-label">Giá ($)</label>
                 <input type="number" name="price" id="price" class="form-control" value="{{ $product->price }}" >
             </div>
 
