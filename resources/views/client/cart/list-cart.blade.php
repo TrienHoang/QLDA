@@ -24,6 +24,25 @@
 @section('content')
     <div class="xc-cart-page pt-80 pb-80">
         <div class="container">
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
             <div class="row gutter-y-30 gx-5">
                 <div class="col-lg-8 col-xl-9">
@@ -122,10 +141,10 @@
                                         </div>
                                         <div class="cart-subtitle">
                                             <h4>Subtotal</h4>
-                                            <h4 class="subtotal-amount">{{ number_format($subtotal, 0, ',', '.') }} VND
+                                            <h4 class="subtotal-amount">{{ number_format($subtotal ?? 0, 0, ',', '.') }} VND
                                             </h4>
                                         </div>
-                                        <div class="cart-checkout">
+                                        {{-- <div class="cart-checkout">
                                             <h4>Shipping</h4>
                                             <div class="shop__widget-list">
                                                 <div class="shop__widget-list-item-2">
@@ -141,15 +160,15 @@
                                                     <label for="c-pickup">Local pickup</label>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="cart-totails">
                                             <h4>Subtotal</h4>
-                                            <h4 class="subtotal-amount">{{ number_format($subtotal, 0, ',', '.') }} VND
+                                            <h4 class="subtotal-amount">{{ number_format($subtotal ?? 0, 0, ',', '.') }} VND
                                             </h4>
                                         </div>
                                         <p>Wetters, as opposed to using Content here, content here, making it look like
                                             readable English. Many desktop </p>
-                                        <a class="cart-checkout-btn" href="checkout.html">Checkout</a>
+                                        <a class="cart-checkout-btn" href="{{ route('checkout.showCheckoutForm') }}">Checkout</a>
                                     </div>
                                 </div>
                             </div>

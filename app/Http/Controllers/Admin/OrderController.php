@@ -53,11 +53,31 @@ class OrderController extends Controller
                 ->withErrors(['status' => "Không thể chuyển từ '$order->status' sang '$newStatus'."]);
         }
 
-        // Cập nhật trạng thái
-        $order->update(['status' => $newStatus]);
+        try {
+            DB::beginTransaction();
 
-        return redirect()->route('admin.orders.show', $order)
-            ->with('success', "Cập nhật trạng thái đơn hàng thành '$newStatus' thành công.");
+            // Nếu trạng thái mới là cancelled, hoàn lại tồn kho
+            if ($newStatus === 'cancelled' && $order->status !== 'cancelled') {
+                foreach ($order->orderDetails as $detail) {
+                    $product = $detail->product;
+                    $product->quantity += $detail->quantity;
+                    $product->save();
+                }
+            }
+
+            // Cập nhật trạng thái
+            $order->update(['status' => $newStatus]);
+
+            DB::commit();
+
+            return redirect()->route('admin.orders.show', $order)
+                ->with('success', "Cập nhật trạng thái đơn hàng thành '$newStatus' thành công.");
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Update order status error: ' . $e->getMessage());
+            return redirect()->route('admin.orders.show', $order)
+                ->withErrors(['error' => 'Lỗi khi cập nhật trạng thái: ' . $e->getMessage()]);
+        }
     }
 
     // Xóa đơn hàng
