@@ -84,5 +84,5 @@ Route::group(['prefix' => 'checkout', 'as' => 'checkout.', 'middleware' => 'auth
     Route::post('/', [CheckoutController::class, 'processCheckout'])->name('process');
     Route::get('/trackOrder', [CheckoutController::class, 'trackOrder'])->name('trackOrder');
     Route::post('/orders/{order}/cancel', [CheckoutController::class, 'cancel'])->name('cancel');
-    Route::post('/apply-coupon', [CheckoutController::class, 'apply'])->name('applyCoupon');
+    Route::post('/apply-coupon', [CheckoutController::class, 'applyCoupon'])->name('coupon');
 });
