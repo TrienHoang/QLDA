@@ -31,34 +31,6 @@ class CheckoutController extends Controller
     }
     public function processCheckout(Request $request)
     {
-        // Kiểm tra nếu người dùng nhấn nút "Áp dụng" mã giảm giá
-        if ($request->has('apply_coupon')) {
-            $request->validate([
-                'coupon_code' => 'required|string|max:255',
-            ]);
-
-            $couponCode = $request->coupon_code;
-            $currentDate = Carbon::now();
-
-            $coupon = Coupon::where('code', $couponCode)->first();
-
-            if (!$coupon) {
-                return back()->with('error', 'Mã giảm giá không tồn tại.');
-            }
-
-            if ($coupon->status !== '1') {
-                return back()->with('error', 'Mã giảm giá không khả dụng.');
-            }
-
-            if ($currentDate->lt(Carbon::parse($coupon->start_date)) || $currentDate->gt(Carbon::parse($coupon->end_date))) {
-                return back()->with('error', 'Mã giảm giá không nằm trong thời gian sử dụng.');
-            }
-
-            // Lưu coupon_id vào session
-            session(['applied_coupon' => $coupon->id]);
-            return back()->with('success', 'Áp dụng mã giảm giá thành công!');
-        }
-
         // Xác thực dữ liệu
         $request->validate([
             'name' => 'required|string|max:255',
@@ -202,33 +174,55 @@ class CheckoutController extends Controller
         }
     }
 
-    public function apply(Request $request)
+    public function applyCoupon(Request $request)
     {
         $request->validate([
             'coupon_code' => 'required|string|max:255',
+            'cart' => 'required|array',
+            'cart.*.product_id' => 'required|exists:products,id',
+            'cart.*.quantity' => 'required|integer|min:1',
         ]);
-
+    
         $couponCode = $request->coupon_code;
         $currentDate = Carbon::now();
-
-        // Tìm mã giảm giá
+        $cartItems = $request->cart;
+    
         $coupon = Coupon::where('code', $couponCode)->first();
-
+        // dd($coupon);
         if (!$coupon) {
-            return back()->with('error', 'Mã giảm giá không tồn tại.');
+            return response()->json(['success' => false, 'message' => 'Mã giảm giá không tồn tại.'], 400);
         }
-
-        if ($coupon->status !== 'active') {
-            return back()->with('error', 'Mã giảm giá không khả dụng.');
+    
+        if ($coupon->status !== 1) {
+            return response()->json(['success' => false, 'message' => 'Mã giảm giá không khả dụng.'], 400);
         }
-
+    
         if ($currentDate->lt(Carbon::parse($coupon->start_date)) || $currentDate->gt(Carbon::parse($coupon->end_date))) {
-            return back()->with('error', 'Mã giảm giá không nằm trong thời gian sử dụng.');
+            return response()->json(['success' => false, 'message' => 'Mã giảm giá không nằm trong thời gian sử dụng.'], 400);
         }
-
-        // Lưu mã giảm giá vào session hoặc giỏ hàng của người dùng (giả sử dùng session)
+    
+        $total_price = 0;
+        foreach ($cartItems as $item) {
+            $product = Product::findOrFail($item['product_id']);
+            $total_price += $item['quantity'] * $product->price;
+        }
+    
+        $discount = 0;
+        if ($coupon->discount_type === 'percentage') {
+            $discount = ($total_price * $coupon->discount_value) / 100;
+            $total_price -= min($discount, $total_price);
+        } elseif ($coupon->discount_type === 'fixed') {
+            $discount = $coupon->discount_value;
+            $total_price -= min($discount, $total_price);
+        }
+    
         session(['applied_coupon' => $coupon->id]);
-
-        return redirect()->route('checkout')->with('success', 'Áp dụng mã giảm giá thành công!');
+    
+        return response()->json([
+            'success' => true,
+            'message' => 'Áp dụng mã giảm giá thành công!',
+            'new_total' => number_format($total_price, 0, ',', '.'),
+            'discount_amount' => number_format($discount, 0, ',', '.')
+        ]);
     }
 }
