@@ -74,7 +74,7 @@
                                             <td><img src="{{ asset('storage/' . $detail->product->image) }}" width="50">
                                             </td>
                                             <td>{{ $detail->product->name }}</td>
-                                            <td>{{ number_format($detail->price, 0, ',', '.') }} VND</td>
+                                            <td>{{ number_format($detail->price, 0, ',', '.') }} $</td>
                                             <td class="product-quantity">
                                                 <div class="xc-product-quantity mt-10 mb-10">
                                                     <span class="xc-cart-minus sub" data-detail-id="{{ $detail->id }}">
@@ -92,7 +92,7 @@
                                             </td>
 
                                             <td id="total-{{ $detail->id }}">
-                                                {{ number_format($detail->total_price, 0, ',', '.') }} VND</td>
+                                                {{ number_format($detail->total_price, 0, ',', '.') }} $</td>
                                             <td>
                                                 <form action="{{ route('cart.remove', $detail->id) }}" method="POST"
                                                     class="d-inline" id="delete-form-{{ $detail->id }}">
@@ -141,7 +141,7 @@
                                         </div>
                                         <div class="cart-subtitle">
                                             <h4>Subtotal</h4>
-                                            <h4 class="subtotal-amount">{{ number_format($subtotal ?? 0, 0, ',', '.') }} VND
+                                            <h4 class="subtotal-amount">{{ number_format($subtotal ?? 0, 0, ',', '.') }} $
                                             </h4>
                                         </div>
                                         {{-- <div class="cart-checkout">
@@ -163,7 +163,7 @@
                                         </div> --}}
                                         <div class="cart-totails">
                                             <h4>Subtotal</h4>
-                                            <h4 class="subtotal-amount">{{ number_format($subtotal ?? 0, 0, ',', '.') }} VND
+                                            <h4 class="subtotal-amount">{{ number_format($subtotal ?? 0, 0, ',', '.') }} $
                                             </h4>
                                         </div>
                                         <p>Wetters, as opposed to using Content here, content here, making it look like
@@ -206,7 +206,7 @@
 
                 const subtotalElement = document.querySelector('#subtotal-amount');
                 if (subtotalElement) {
-                    subtotalElement.innerText = subtotal.toLocaleString('vi-VN') + ' VND';
+                    subtotalElement.innerText = subtotal.toLocaleString('vi-VN') + ' $';
                 }
             }
 
@@ -248,7 +248,7 @@
                 // Cập nhật tổng từng sản phẩm
                 const totalElement = document.getElementById(`total-${detailId}`);
                 const totalPrice = quantity * unitPrice;
-                totalElement.innerText = totalPrice.toLocaleString('vi-VN') + ' VND';
+                totalElement.innerText = totalPrice.toLocaleString('vi-VN') + ' $';
 
                 // Cập nhật tổng Subtotal
                 let newSubtotal = 0;
@@ -260,7 +260,7 @@
 
                 // Cập nhật tất cả nơi hiển thị Subtotal
                 document.querySelectorAll('.subtotal-amount').forEach(el => {
-                    el.innerText = newSubtotal.toLocaleString('vi-VN') + ' VND';
+                    el.innerText = newSubtotal.toLocaleString('vi-VN') + ' $';
                 });
             }
 

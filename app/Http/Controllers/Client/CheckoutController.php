@@ -114,7 +114,7 @@ class CheckoutController extends Controller
                 $userCart->details()->delete();
                 $userCart->delete();
             }
-
+ 
             DB::commit();
 
             // Xóa session coupon sau khi áp dụng

@@ -23,23 +23,23 @@
                     <div id="carouselExample" class="carousel slide">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="{{ asset('build/client/assets/img/banner/baner-05.jpg') }}" class="d-block w-100"
+                                <img src="{{ asset('build/client/assets/img/banner/banner10.jpg') }}" class="d-block w-100"
                                     alt="...">
                             </div>
                             <div class="carousel-item">
-                                <img src="{{ asset('build/client/assets/img/banner/banner-01.jpg') }}" class="d-block w-100"
+                                <img src="{{ asset('build/client/assets/img/banner/banner11.jpg') }}" class="d-block w-100"
                                     alt="...">
                             </div>
                             <div class="carousel-item">
-                                <img src="{{ asset('build/client/assets/img/banner/banner-02.jpg') }}" class="d-block w-100"
+                                <img src="{{ asset('build/client/assets/img/banner/banner12.jpg') }}" class="d-block w-100"
                                     alt="...">
                             </div>
                             <div class="carousel-item">
-                                <img src="{{ asset('build/client/assets/img/banner/banner-03.jpg') }}" class="d-block w-100"
+                                <img src="{{ asset('build/client/assets/img/banner/banner14.jpg') }}" class="d-block w-100"
                                     alt="...">
                             </div>
                             <div class="carousel-item">
-                                <img src="{{ asset('build/client/assets/img/banner/banner-04.jpg') }}" class="d-block w-100"
+                                <img src="{{ asset('build/client/assets/img/banner/banner10.jpg') }}" class="d-block w-100"
                                     alt="...">
                             </div>
                         </div>
@@ -86,8 +86,9 @@
                             <h3 class="xc-product-two__title"><a href="{{ route('client.showProduct', $product->id) }}">{{ $product->name }}</a></h3>
                             <h4 class="xc-product-two__price">
                                 @if ($product->discount_price)
-                                    <span>${{ number_format($product->discount_price, 2) }}</span>
-                                    <del>${{ number_format($product->price, 2) }}</del>
+                                    <span class="text-danger fw-bold">${{ number_format($product->discount_price, 2) }}</span>
+                                    <del class="text-muted ms-2">${{ number_format($product->price, 2) }}</del>
+                                    <span class="badge bg-success ms-2">-{{ round(100 - ($product->discount_price / $product->price * 100)) }}%</span>
                                 @else
                                     <span>${{ number_format($product->price, 2) }}</span>
                                 @endif

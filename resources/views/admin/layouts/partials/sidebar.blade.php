@@ -4,7 +4,7 @@
                 <div>
                     <div class="logo-wrapper logo-wrapper-center">
                         <a href="index.html" data-bs-original-title="" title="">
-                            <h2 class="text-light">TechFusion</h2>
+                            <h2 class="text-light">FOODLUXE</h2>
                         </a>
                         <div class="back-btn">
                             <i class="fa fa-angle-left"></i>
