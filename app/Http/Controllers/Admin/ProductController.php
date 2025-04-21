@@ -17,11 +17,24 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $query = Product::with('category')->orderBy('id', 'desc');
+
+        $search = $request->input('search');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%') // Tìm kiếm theo tên sản phẩm
+                  ->orWhereHas('category', function ($q) use ($search) {
+                      $q->where('name', 'like', '%' . $search . '%'); // Tìm kiếm theo tên danh mục
+                  });
+            });
+        }
+
         $products = $query->paginate(10);
-        return view('admin.products.list-product', compact('products'));
+
+        return view('admin.products.list-product', compact('products', 'search'));
     }
 
     /**

@@ -74,7 +74,7 @@ class OrderController extends Controller
                 ->with('success', "Cập nhật trạng thái đơn hàng thành '$newStatus' thành công.");
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::error('Update order status error: ' . $e->getMessage());
+            \log::error('Update order status error: ' . $e->getMessage());
             return redirect()->route('admin.orders.show', $order)
                 ->withErrors(['error' => 'Lỗi khi cập nhật trạng thái: ' . $e->getMessage()]);
         }
