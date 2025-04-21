@@ -17,7 +17,7 @@
                 <div class="card card-table">
                     <div class="card-body">
                         <div class="title-header option-title d-flex justify-content-between align-items-center">
-                            <h5>All Category</h5>
+                            <a href="{{ route('admin.categories.listCategory') }}"><h5>All Category</h5></a>
                             <div class="d-flex gap-2">
                                 <!-- Search Form -->
                                 <form action="{{ route('admin.categories.listCategory') }}" method="GET" class="d-flex">
