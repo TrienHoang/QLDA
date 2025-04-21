@@ -3,7 +3,7 @@
         <div class="container">
             <div class="xc-header-one__wrapper">
                 <div class="xc-header-one__logo">
-                    <a href="{{route('client.home')}}"><img src="{{ asset('build/client/assets/img/logo/white-logo.png')}}" alt="logo" width="158"></a>
+                    <a href="{{route('client.home')}}"><img src="{{ asset('build/client/assets/img/logo/logon.png')}}" alt="logo" width="158"></a>
                 </div>
                 <div class="xc-header-one__right">
                     <div class="xc-header-one__search d-none d-xl-block">

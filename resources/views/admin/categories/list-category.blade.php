@@ -2,7 +2,7 @@
 
 @section('title')
     @parent
-    Danh sach danh muc
+    Danh sách danh mục
 @endsection
 
 @section('content')
@@ -16,15 +16,20 @@
             <div class="col-sm-12">
                 <div class="card card-table">
                     <div class="card-body">
-                        <div class="title-header option-title">
-                            <h5>All Category</h5>
-
-                            <form class="d-inline-flex">
+                        <div class="title-header option-title d-flex justify-content-between align-items-center">
+                            <a href="{{ route('admin.categories.listCategory') }}"><h5>All Category</h5></a>
+                            <div class="d-flex gap-2">
+                                <!-- Search Form -->
+                                <form action="{{ route('admin.categories.listCategory') }}" method="GET" class="d-flex">
+                                    <input type="text" name="search" class="form-control me-2" placeholder="Tìm kiếm theo tên danh mục..." value="{{ $search ?? '' }}">
+                                    <button type="submit" class="btn btn-primary">Tìm</button>
+                                </form>
+                                <!-- Add New Button -->
                                 <a href="{{ route('admin.categories.addCategory') }}"
                                     class="align-items-center btn btn-theme d-flex">
                                     <i data-feather="plus-square"></i>Add New
                                 </a>
-                            </form>
+                            </div>
                         </div>
 
                         <div class="table-responsive category-table">
@@ -42,9 +47,9 @@
                                     </thead>
 
                                     <tbody>
-                                        @foreach ($listCategory as $key => $value)
+                                        @forelse ($listCategory as $value)
                                             <tr>
-                                                <td>{{ $key + 1 }}</td>
+                                                <td>{{ $value->id }}</td>
                                                 <td>{{ $value->name }}</td>
                                                 <td>{{ $value->slug }}</td>
                                                 <td>{{ $value->description }}</td>
@@ -53,22 +58,20 @@
                                                     <ul>
                                                         <li>
                                                             <a href="{{ route('admin.categories.detailCategory', $value->id) }}">
-                                                            <i class="ri-eye-line"></i>
+                                                                <i class="ri-eye-line"></i>
                                                             </a>
                                                         </li>
                                                         <li>
                                                             <a href="{{ route('admin.categories.updateCategory', $value->id) }}">
-                                                            <i class="ri-pencil-line"></i>
+                                                                <i class="ri-pencil-line"></i>
                                                             </a>
                                                         </li>
-
                                                         <li>
                                                             <a href="#" data-bs-toggle="modal"
                                                                 data-bs-target="#deleteModal{{ $value->id }}">
                                                                 <i class="ri-delete-bin-line text-danger"></i>
                                                             </a>
                                                         </li>
-
                                                     </ul>
                                                 </td>
                                             </tr>
@@ -97,15 +100,17 @@
                                                                 method="POST">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <button type="submit" class="btn btn-danger">Xác nhận
-                                                                    xóa</button>
+                                                                <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
                                                             </form>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        @endforeach
-
+                                        @empty
+                                            <tr>
+                                                <td colspan="6" class="text-center">Không tìm thấy danh mục nào.</td>
+                                            </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>

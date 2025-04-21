@@ -142,12 +142,12 @@
                                             <div class="cart-summary">
                                                 <p>Tổng tiền hàng: <span
                                                         id="subtotal">{{ number_format($cart->total_price ?? 0, 0, ',', '.') }}</span>
-                                                    VND</p>
-                                                <p>Giảm giá: <span id="discount">0</span> VND</p>
-                                                <p>Phí vận chuyển: <span id="shipping_fee">0</span> VND</p>
+                                                    $</p>
+                                                <p>Giảm giá: <span id="discount">0</span> $</p>
+                                                <p>Phí vận chuyển: <span id="shipping_fee">0</span> $</p>
                                                 <p>Tổng cộng: <span
                                                         id="total_amount">{{ number_format($cart->total_price ?? 0, 0, ',', '.') }}</span>
-                                                    VND</p>
+                                                    $</p>
                                             </div>
                                         </div>
 

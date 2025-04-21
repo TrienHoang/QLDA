@@ -164,15 +164,18 @@
         const plusBtns = document.querySelectorAll('.xc-cart-plus');
         const quantityInputs = document.querySelectorAll('.xc-cart-input');
 
-        const priceElement = document.querySelector('[data-unitprice]');
         const currentPriceElement = document.querySelector('.price-current');
         const oldPriceElement = document.querySelector('.price-old');
 
-        const unitPrice = parseFloat(priceElement.dataset.unitprice);
+        let unitPrice = 0;
         let oldUnitPrice = 0;
 
-        if (oldPriceElement) {
-            oldUnitPrice = parseFloat(oldPriceElement.closest('[data-unitprice]').dataset.unitprice);
+        const newAmountElement = document.querySelector('.new-ammount');
+        if (newAmountElement.dataset.discount === 'true') {
+            unitPrice = parseFloat(newAmountElement.dataset.unitprice);
+            oldUnitPrice = parseFloat(document.querySelector('.old-ammount').dataset.unitprice);
+        } else {
+            unitPrice = parseFloat(newAmountElement.dataset.unitprice);
         }
 
         const stock = parseInt(document.querySelector('.product__details-stock').dataset.stock);
@@ -196,7 +199,7 @@
 
                         if (errorMessage) errorMessage.style.display = 'none';
 
-                        updatePrice(currentValue, unitPrice, oldUnitPrice);
+                        updatePrice(currentValue);
                     } else {
                         if (errorMessage) errorMessage.style.display = 'block';
                     }
@@ -223,14 +226,14 @@
 
                         if (errorMessage) errorMessage.style.display = 'none';
 
-                        updatePrice(currentValue, unitPrice, oldUnitPrice);
+                        updatePrice(currentValue);
                     }
                 }
             });
         });
 
         // Cập nhật giá
-        function updatePrice(quantity, unitPrice, oldUnitPrice) {
+        function updatePrice(quantity) {
             if (currentPriceElement) {
                 const totalPrice = (quantity * unitPrice).toFixed(2);
                 currentPriceElement.textContent = formatNumber(totalPrice);
@@ -248,5 +251,4 @@
         }
     });
 </script>
-
 @endpush

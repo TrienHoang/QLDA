@@ -34,14 +34,14 @@
                             </div>
                             <div class="order-details">
                                 <p><strong>Địa chỉ giao hàng:</strong> {{ $order->shipping_address }}</p>
-                                <p><strong>Tổng tiền:</strong> {{ number_format($order->total_price, 0, ',', '.') }} VND</p>
+                                <p><strong>Tổng tiền:</strong> {{ number_format($order->total_price, 0, ',', '.') }} $</p>
                                 <p><strong>Ghi chú:</strong> {{ $order->note ?? 'Không có' }}</p>
                                 <h5>Sản phẩm:</h5>
                                 <ul>
                                     @foreach ($order->orderDetails as $detail)
                                         <li>
                                             {{ $detail->product->name }} x {{ $detail->quantity }} - 
-                                            {{ number_format($detail->total_price, 0, ',', '.') }} VND
+                                            {{ number_format($detail->total_price, 0, ',', '.') }} $
                                         </li>
                                     @endforeach
                                 </ul>

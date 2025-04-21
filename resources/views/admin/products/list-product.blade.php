@@ -7,27 +7,43 @@
 
 @section('content')
     <div class="container-fluid">
+        <!-- Thông báo -->
         @if (session('success'))
-    <div class="alert alert-success">
-        {{session('success')}}
-    </div>
-@endif
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
         @if (session('message'))
             <div class="alert alert-primary" role="alert">
                 {{ session('message') }}
             </div>
         @endif
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <div class="row">
             <div class="col-sm-12">
                 <div class="card card-table">
                     <div class="card-body">
-                        <div class="title-header option-title">
+                        <div class="title-header option-title d-flex justify-content-between align-items-center">
                             <h5>Danh sách sản phẩm</h5>
-                            <form class="d-inline-flex">
+                            <div class="d-flex gap-2">
+                                <!-- Search Form -->
+                                <form action="{{ route('admin.products.index') }}" method="GET" class="d-flex">
+                                    <input type="text" name="search" class="form-control me-2" placeholder="Tìm kiếm theo tên sản phẩm hoặc danh mục..." value="{{ $search ?? '' }}">
+                                    <button type="submit" class="btn btn-primary">Tìm</button>
+                                    @if ($search)
+                                        <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">Xóa bộ lọc</a>
+                                    @endif
+                                </form>
+                                <!-- Add New Button -->
                                 <a href="{{ route('admin.products.create') }}" class="align-items-center btn btn-theme d-flex">
                                     <i data-feather="plus-square"></i>Thêm mới
                                 </a>
-                            </form>
+                            </div>
                         </div>
 
                         <div class="table-responsive product-table">
@@ -108,18 +124,23 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                                <div class="d-flex justify-content-center mt-3">
-                                    @for ($i = 1; $i <= $products->lastPage(); $i++)
-                                        <a href="{{ $products->url($i) }}" class="mx-1 {{ $i == $products->currentPage() ? 'fw-bold text-primary' : '' }}">
-                                            {{ $i }}
-                                        </a>
-                                    @endfor
-                                </div>
+                                        </div>
+                                    @empty
+                                        <tr>
+                                            <td colspan="10" class="text-center">Không có sản phẩm nào</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
 
-
+                        <!-- Phân trang -->
+                        <div class="d-flex justify-content-center mt-3">
+                            @for ($i = 1; $i <= $products->lastPage(); $i++)
+                                <a href="{{ $products->url($i) }}" class="mx-1 {{ $i == $products->currentPage() ? 'fw-bold text-primary' : '' }}">
+                                    {{ $i }}
+                                </a>
+                            @endfor
                         </div>
                     </div>
                 </div>
