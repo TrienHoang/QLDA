@@ -38,7 +38,7 @@
                                             <th>ID</th>
                                             <th>Tên sản phẩm</th>
                                             <th>Danh mục</th>
-                                            <th>Slug</th>
+                                            {{-- <th>Slug</th> --}}
                                             <th>Giá</th>
                                             <th>Giảm giá</th>
                                             <th>Số lượng</th>
@@ -54,7 +54,7 @@
                                                 <td>{{ $pro->id }}</td>
                                                 <td>{{ $pro->name }}</td>
                                                 <td>{{ $pro->category->name ?? 'Không có danh mục' }}</td>
-                                                <td>{{ $pro->slug }}</td>
+                                                {{-- <td>{{ $pro->slug }}</td> --}}
                                                 <td>${{ number_format($pro->price, 2) }}</td>
                                                 <td>{{ $pro->discount_price ? number_format($pro->discount_price, 2) . ' $' : 'Không có' }}</td>
                                                 <td>{{ $pro->quantity }}</td>
