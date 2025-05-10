@@ -7,10 +7,21 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 class CategoryController extends Controller
 {
-    public function listCategory() {
-        $listCategory = Category::all();
+    public function listCategory(Request $request) {
+        $query = Category::query();
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where('name', 'like', "%{$search}%");
+        }
+
+        $listCategory = $query->orderBy('id', 'desc')->paginate(10);
+
+        $listCategory->appends(['search' => $request->search]);
+
         return view('admin.categories.list-category')->with([
-            'listCategory' => $listCategory
+            'listCategory' => $listCategory,
+            'search' => $request->search 
         ]);
     }
 
@@ -65,7 +76,7 @@ class CategoryController extends Controller
 
         $category = Category::findOrFail($id); // Lấy danh mục cần chỉnh sửa
         $categories = Category::where('id', '!=', $id)->get(); // Lấy danh sách danh mục khác
-    
+
         return view('admin.categories.update-category', compact('category', 'categories'));
     }
 
@@ -83,7 +94,7 @@ class CategoryController extends Controller
             'status.in' => 'Trạng thái không hợp lệ.',
             'parent_id.exists' => 'Danh mục cha không hợp lệ.',
         ]);
-        
+
         $data = [
             'name' => $req->name,
             'slug' => \Illuminate\Support\Str::slug($req->name),
