@@ -4,7 +4,7 @@
                 <div>
                     <div class="logo-wrapper logo-wrapper-center">
                         <a href="index.html" data-bs-original-title="" title="">
-                            <h2 class="text-light">TechFusion</h2>
+                            <h2 class="text-light">FOODLUXE</h2>
                         </a>
                         <div class="back-btn">
                             <i class="fa fa-angle-left"></i>
@@ -43,11 +43,11 @@
                                     </a>
                                     <ul class="sidebar-submenu">
                                         <li>
-                                            <a href="products.html">Prodcts</a>
+                                            <a href="{{route('admin.products.index')}}">List Product</a>
                                         </li>
 
                                         <li>
-                                            <a href="add-new-product.html">Add New Products</a>
+                                            <a href="{{ route('admin.products.create')}}">Add New Products</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -114,12 +114,12 @@
                                     </a>
                                     <ul class="sidebar-submenu">
                                         <li>
-                                            <a href="order-list.html">Order List</a>
+                                            <a href="{{ route('admin.orders.index') }}">Order List</a>
                                         </li>
-                                        <li>
-                                            <a href="order-detail.html">Order Detail</a>
-                                        </li>
-                                        
+                                        {{-- <li>
+                                            <a href="{{ route('admin.orders.show', $order) }}">Order Detail</a>
+                                        </li> --}}
+
                                     </ul>
                                 </li>
 

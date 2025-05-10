@@ -22,7 +22,6 @@ class OrderFactory extends Factory
     {
         return [
             'user_id' => User::all()->random()->id,
-            'cart_id' => Cart::all()->random()->id,
             'payment_id' => Payment::all()->random()->id,
             'coupon_id' => Coupon::all()->random()->id,
             'total_price' => $this->faker->randomFloat(2, 0, 1000),

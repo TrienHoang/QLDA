@@ -19,4 +19,8 @@ class Category extends Model
         'parent_id',
         'status',
     ];
+
+    public function product() {
+        return $this->hasOne(Product::class);
+    }
 }
